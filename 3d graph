@@ -1,49 +1,29 @@
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
 
-def draw_interactive_3d_graph(df, x_col, y_col, z_col, title="Interactive 3D Plot"):
-    """
-    Draws an interactive 3D graph based on three columns of a DataFrame using Plotly.
-
-    Parameters:
-    - df (pd.DataFrame): The DataFrame containing the data.
-    - x_col (str): The column name for the X-axis.
-    - y_col (str): The column name for the Y-axis.
-    - z_col (str): The column name for the Z-axis.
-    - title (str): Title of the graph (default: "Interactive 3D Plot").
-    """
-    # Create the 3D scatter plot
-    fig = px.scatter_3d(
-        df,
-        x=x_col,
-        y=y_col,
-        z=z_col,
-        title=title,
-        labels={x_col: x_col, y_col: y_col, z_col: z_col},  # Axis labels
-        template="plotly_dark",  # Optional theme
-        opacity=0.8  # Set point transparency
-    )
-
-    # Customize layout for better interactivity
-    fig.update_layout(
-        scene=dict(
-            xaxis_title=x_col,
-            yaxis_title=y_col,
-            zaxis_title=z_col,
-        ),
-        margin=dict(l=0, r=0, b=0, t=30)  # Reduce margins
-    )
-
-    # Show the plot
-    fig.show()
-
-# Example usage in Jupyter Notebook:
 # Sample DataFrame
-df = pd.DataFrame({
-    "X": [1, 2, 3, 4, 5],
-    "Y": [10, 15, 20, 25, 30],
-    "Z": [100, 150, 200, 250, 300]
-})
+data = {
+    'x': [1, 2, 3, 4, 5, 1, 2, 3, 4, 5],
+    'y': [2, 3, 4, 5, 6, 3, 4, 5, 6, 7],
+    'line_category': [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+}
 
-# Call the function with the DataFrame and column names
-draw_interactive_3d_graph(df, "X", "Y", "Z", title="Example Interactive 3D Plot")
+df = pd.DataFrame(data)
+
+# Plot the data based on line_category
+plt.figure(figsize=(8, 6))
+
+# Iterate over each category
+for category in df['line_category'].unique():
+    # Filter the DataFrame by the current category
+    subset = df[df['line_category'] == category]
+    
+    # Plot the line for the current category
+    plt.plot(subset['x'], subset['y'], label=f'Line {category}')
+
+# Add labels and title
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.title('Lines Based on Category')
+plt.legend(title='Categories')
+plt.show()
