@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample DataFrame
+data = {
+    'Date': ['9Mar37', '10Mar37', '11Mar37', '12Mar37'],  # Example date strings
+    'Value1': [10, 20, 15, 25],
+    'Value2': [30, 25, 35, 40],
+    'Value3': [50, 45, 55, 60]
+}
+df = pd.DataFrame(data)
+
+# Convert 'Date' column to datetime
+df['Date'] = pd.to_datetime(df['Date'], format='%d%b%y')  # Interprets '9Mar37' as 2037-03-09
+
+# Plot the three columns
+plt.figure(figsize=(10, 5))
+plt.plot(df['Date'], df['Value1'], label='Value1', marker='o')
+plt.plot(df['Date'], df['Value2'], label='Value2', marker='s')
+plt.plot(df['Date'], df['Value3'], label='Value3', marker='^')
+
+# Formatting the plot
+plt.xlabel('Date')
+plt.ylabel('Values')
+plt.title('Line Plot with Date on X-axis')
+plt.legend()
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.grid(True)
+
+# Show the plot
+plt.show()
