@@ -1,29 +1,49 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
+from mpl_toolkits.mplot3d import Axes3D
 
-# Sample DataFrame
+# Example DataFrame with three columns: x, y, and z
 data = {
-    'x': [1, 2, 3, 4, 5, 1, 2, 3, 4, 5],
-    'y': [2, 3, 4, 5, 6, 3, 4, 5, 6, 7],
-    'line_category': [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+    'x': [0, 1, 2, 0, 1, 2, 0, 1, 2],
+    'y': [0, 0, 0, 1, 1, 1, 2, 2, 2],
+    'z': [0, 1, 4, 1, 2, 3, 4, 3, 2]
 }
-
 df = pd.DataFrame(data)
 
-# Plot the data based on line_category
-plt.figure(figsize=(8, 6))
+# Extract the coordinate arrays
+x = df['x'].values
+y = df['y'].values
+z = df['z'].values
 
-# Iterate over each category
-for category in df['line_category'].unique():
-    # Filter the DataFrame by the current category
-    subset = df[df['line_category'] == category]
-    
-    # Plot the line for the current category
-    plt.plot(subset['x'], subset['y'], label=f'Line {category}')
+# Create a regular grid for interpolation
+xi = np.linspace(x.min(), x.max(), 100)
+yi = np.linspace(y.min(), y.max(), 100)
+xi, yi = np.meshgrid(xi, yi)
 
-# Add labels and title
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.title('Lines Based on Category')
-plt.legend(title='Categories')
+# Interpolate z values using griddata
+zi = griddata((x, y), z, (xi, yi), method='cubic')
+
+# Create a 3D plot
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the surface
+surf = ax.plot_surface(xi, yi, zi, cmap='viridis', edgecolor='none')
+
+# Scatter original data points
+ax.scatter(x, y, z, color='red', s=50, edgecolor='k', label='Data Points')
+
+# Labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.set_title('3D Interpolated Surface')
+
+# Color bar
+fig.colorbar(surf, ax=ax, shrink=0.5, aspect=10, label='Interpolated Z')
+
+# Show the plot
+plt.legend()
 plt.show()
