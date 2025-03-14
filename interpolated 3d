@@ -1,0 +1,34 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
+
+# Sample DataFrame with three columns: x, y, z
+data = {
+    'x': np.random.uniform(0, 10, 100),
+    'y': np.random.uniform(0, 10, 100),
+    'z': np.random.uniform(0, 10, 100)
+}
+df = pd.DataFrame(data)
+
+# Extract x, y, z
+x, y, z = df['x'].values, df['y'].values, df['z'].values
+
+# Define a grid over the domain
+xi = np.linspace(x.min(), x.max(), 100)
+yi = np.linspace(y.min(), y.max(), 100)
+xi, yi = np.meshgrid(xi, yi)
+
+# Interpolate z values over the grid
+zi = griddata((x, y), z, (xi, yi), method='cubic')  # Can use 'linear' or 'nearest'
+
+# Plot the interpolated surface
+plt.figure(figsize=(8, 6))
+plt.contourf(xi, yi, zi, cmap='viridis')
+plt.colorbar(label='Interpolated Z')
+plt.scatter(x, y, c=z, edgecolors='k', cmap='viridis', marker='o', label='Data Points')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend()
+plt.title('Interpolated Surface')
+plt.show()
