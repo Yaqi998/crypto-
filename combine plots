@@ -1,0 +1,30 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample DataFrames (assuming same column names: 'X' and 'Y')
+df1 = pd.DataFrame({'X': [1, 2, 3, 4], 'Y': [10, 15, 20, 25]})
+df2 = pd.DataFrame({'X': [1, 2, 3, 4], 'Y': [12, 18, 22, 28]})
+df3 = pd.DataFrame({'X': [1, 2, 3, 4], 'Y': [8, 14, 19, 24]})
+df4 = pd.DataFrame({'X': [1, 2, 3, 4], 'Y': [11, 16, 21, 27]})
+df5 = pd.DataFrame({'X': [1, 2, 3, 4], 'Y': [9, 13, 18, 23]})
+
+# Store them in a list
+dfs = [df1, df2, df3, df4, df5]
+labels = ['Dataset 1', 'Dataset 2', 'Dataset 3', 'Dataset 4', 'Dataset 5']  # Labels for legend
+
+# Create the figure
+plt.figure(figsize=(8, 5))
+
+# Loop through DataFrames and plot each
+for i, df in enumerate(dfs):
+    plt.plot(df['X'], df['Y'], marker='o', label=labels[i])
+
+# Formatting
+plt.xlabel('X Axis')
+plt.ylabel('Y Axis')
+plt.title('Multiple DataFrames Line Plot')
+plt.legend()
+plt.grid(True)
+
+# Show plot
+plt.show()
