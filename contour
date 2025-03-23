@@ -1,0 +1,27 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Generate finer grid for smoother contours
+X = np.linspace(-5, 5, 100)  # Increase number of points (was 50)
+Y = np.linspace(-5, 5, 100)
+X, Y = np.meshgrid(X, Y)
+Z = np.sin(np.sqrt(X**2 + Y**2))  # Example function
+
+# Create 3D figure
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Use more levels for smoother contours
+ax.contour3D(X, Y, Z, levels=50, cmap='coolwarm')  
+
+# Adjust view angle
+ax.view_init(elev=30, azim=45)
+
+# Labels
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z values")
+ax.set_title("3D Contour Plot")
+
+plt.show()
