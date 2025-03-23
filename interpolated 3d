@@ -1,34 +1,39 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.interpolate import griddata
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import colors
 
-# Sample DataFrame with three columns: x, y, z
-data = {
-    'x': np.random.uniform(0, 10, 100),
-    'y': np.random.uniform(0, 10, 100),
-    'z': np.random.uniform(0, 10, 100)
-}
-df = pd.DataFrame(data)
+# Generate sample data
+X = np.linspace(-5, 5, 50)
+Y = np.linspace(-5, 5, 50)
+X, Y = np.meshgrid(X, Y)
+Z = np.sin(np.sqrt(X**2 + Y**2))  # Simple function for Z values
 
-# Extract x, y, z
-x, y, z = df['x'].values, df['y'].values, df['z'].values
+# Define 4 color levels (discrete)
+levels = np.linspace(Z.min(), Z.max(), 5)  # 4 colors, 5 levels
 
-# Define a grid over the domain
-xi = np.linspace(x.min(), x.max(), 100)
-yi = np.linspace(y.min(), y.max(), 100)
-xi, yi = np.meshgrid(xi, yi)
+# Create a colormap with 4 distinct colors
+cmap = plt.get_cmap('viridis', 4)  # You can choose a different colormap, like 'coolwarm'
 
-# Interpolate z values over the grid
-zi = griddata((x, y), z, (xi, yi), method='cubic')  # Can use 'linear' or 'nearest'
+# Normalize the Z values to match the levels
+norm = colors.BoundaryNorm(boundaries=levels, ncolors=4)
 
-# Plot the interpolated surface
-plt.figure(figsize=(8, 6))
-plt.contourf(xi, yi, zi, cmap='viridis')
-plt.colorbar(label='Interpolated Z')
-plt.scatter(x, y, c=z, edgecolors='k', cmap='viridis', marker='o', label='Data Points')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.legend()
-plt.title('Interpolated Surface')
+# Create figure and plot
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot surface with distinct colors
+surf = ax.plot_surface(X, Y, Z, cmap=cmap, norm=norm, edgecolor='none')
+
+# Add color bar with distinct intervals
+cbar = fig.colorbar(surf, ticks=levels)
+cbar.set_label('Z values')
+
+# Set labels
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Z-axis')
+ax.set_title('3D Surface with 4 Colors')
+
+# Show plot
 plt.show()
